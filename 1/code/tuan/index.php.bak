@@ -1,0 +1,174 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf8" />
+
+<title>test</title>
+<script type="text/javascript" src="../js/base_min.js"></script>
+<style>
+body{font-size:14.3px;}
+.deal {border-bottom:1px solid #eee; padding-bottom:10px;}
+.deal b,.deal u,.deal del{padding:2px 5px; font-size:20px;}
+.deal_title {display:none;}
+
+
+table {
+border-spacing: 2px 2px;
+border-color: gray;
+border-collapse: separate;
+display: table;
+}
+</style>
+<script>
+window.onload=function(){
+	$('td.btn_expand').click=function(){
+			var id=this.attr("id").replace('btn_');
+			if(this.innerHTML=="+"){
+				this.innerHTML="-";
+				$('#title_'+id).show();
+			}
+			else{
+				this.innerHTML="+";
+				$('#title_'+id).hide();
+			}
+
+	};
+};
+</script>
+
+</head>
+<body>
+
+<?php
+ $f = new SaeFetchurl();
+ $content = $f->fetch('http://www.meituan.com/api/v1/wuhan/deals');
+ if ($ret === false){
+         var_dump($f->errno(), $f->errmsg());
+		 exit;
+ }
+//echo $content;
+
+//解析XML
+$xml = simplexml_load_string($content);
+$result = $xml->xpath("//deal");
+//print_r($result);
+
+$mysql = new SaeMysql();	
+
+//'id','division_timezone','division_offset_gmt',
+$fields=array(
+'deal_url','title','small_image_url','medium_image_url','large_image_url','division_id','division_name','division_lat','division_lng','vendor_id','vendor_name','vendor_website_url','status','start_date','end_date','quantity_sold','price','value','discount_percent'
+);
+
+$timestamp=time(); 
+
+foreach($result as $deal){
+	$ins=array();
+	foreach($fields as $field){
+		$de=getEl($deal,$field);
+		$ins[$field]=$de;
+	}
+	$ins["from_id"]=getEl($deal,"id");
+	if($ins["status"]=="open") 
+		$ins["status"]=1;
+	else
+		$ins["status"]=0;
+
+	$ins["fromsite"]="美团";
+	$ins["regtime"]=$timestamp;
+	$ins["lasttime"]=$timestamp;
+	
+	$sql = "SELECT id FROM `tuan_salesdata` where from_id='". $ins["from_id"] . "' and fromsite='" . $ins["fromsite"] ."'";
+	$id=$mysql->getVar( $sql );
+	$id=$id?$id:'';
+	save($ins, $id, "`tuan_salesdata`", $id_name = 'id');
+	//echo '$ins=';	print_r($ins);
+}
+	
+$sql = "SELECT * FROM `tuan_salesdata` order by quantity_sold * price desc";
+$data = $mysql->getData( $sql );
+//echo "data=";print_r($data);
+$tab='<table width="800" border="0" cellspacing="0" cellpadding="0" >';
+foreach($data as $deal){
+	//$tab.='<div class="deal">#'.$deal['id'].'　['.$deal['fromsite'].']<b><a href="'.$deal['deal_url'].'" target="_blank">'.$deal["vendor_name"].'</a></b><u>¥'.$deal["price"].'</u><del>¥'.$deal["value"].'</del><b>'.$deal["quantity_sold"].'</b><b>总¥'.($deal["quantity_sold"] * $deal["price"]).'</b><div id="title_'.$deal["id"].'" class="deal_title"><p><a href="'.$deal['deal_url'].'" target="_blank">'.$deal["title"].'</a></p><p>'.$deal["deal_url"].'</p></div>';
+
+	$tab.='<tbody><tr class="deal"><td class="btn_expand" id="btn_'.$deal['id'].'">+</td><td>#'.$deal['id'].'</td><td>['.$deal['fromsite'].']</td><td><a href="'.$deal['deal_url'].'" target="_blank">'.$deal["vendor_name"].'</a></td><td>¥'.$deal["price"].'</td><td>¥'.$deal["value"].'</td><td>'.$deal["quantity_sold"].'</td><td>总¥'.($deal["quantity_sold"] * $deal["price"]).'</td><td>   </td></tr><tr  id="title_'.$deal["id"].'"  class="deal_title"><td colspan="9"><p><a href="'.$deal['deal_url'].'" target="_blank">'.$deal["title"].'</a></p><p>'.$deal["deal_url"].'</p></td></tr></tbody>';
+
+}
+echo $tab;echo '</table>';
+
+
+
+function getEl($xmlobj,$name){
+	$el=$xmlobj->xpath($name);
+	if($el)
+	return $el[0]."";
+	else
+		return '';
+}
+	/**
+	 * 添加或插入数据
+	 * @param $data 键/值对应的数组，其中键为字段名，值为要插入的内容
+	 * @param $id int 更新时使用的关键字，如果指定该项，则执行更新操作
+	 * @param $table string 表单名，如果不指定，则使用setTable()设置的默认表名
+	 * @param $id_name string 字段名，更新时用于查询的字段，默认查询名为'id'的字段
+	 * @return int|false 返回最后插入的记录ID或更新记录的ID,失败返回false
+	 */
+	function save($data, $id = '', $table = '', $id_name = 'id') {
+		global $mysql;
+
+		if ($id == '') {
+			$type = 'insert';
+		} else {
+			$type = 'update';
+		}
+
+		if ($type == 'insert') {
+			$keys = array();
+			$values = array();
+			foreach ($data as $key => $value) {
+				$keys[] = '`' .$key . '`';
+				$values[] = '"' .mysql_escape_string($value) . '"';
+			}
+			if (sizeof($keys) != sizeof($values)) {
+				return false;
+			}
+			$ignore = '';
+
+			$sql = 'INSERT  INTO ' . $table . '(' .implode(',', $keys). ') VALUES('. implode(',', $values) .')';	
+//			echo $sql;
+			$mysql->runSql($sql);
+
+			if ($mysql->errno() != 0) {
+				die( "Error:" . $mysql->errmsg() );
+				return false;
+			}
+			return $mysql->lastId();
+		}
+		$values = array();
+		foreach ($data as $key=>$value) {
+			$values[] = '`' .trim($key) . '`="' . mysql_escape_string($value) . '"';
+		}
+		if (!sizeof($values)) {
+			return false;
+		}
+		$sql = 'UPDATE ' . $table . ' SET ' . implode(',', $values) . ' WHERE ' . $id_name . '=' . $id;
+//		echo $sql;
+		$mysql->runSql($sql);
+		if ($mysql->errno() != 0) {
+			die( "Error:" . $mysql->errmsg() );
+			return false;
+		}
+
+		return 1;
+	}
+
+
+
+$mysql->closeDb();
+
+ 
+
+?>
+
+</body>
+</html>

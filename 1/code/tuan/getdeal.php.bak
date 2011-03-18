@@ -1,0 +1,111 @@
+<?php
+/*
+$f = new SaeFetchurl();
+$url="http://wh.meituan.com/deal/755253.html";
+ $content = $f->fetch($url);
+ if ($ret === false){
+         var_dump($f->errno(), $f->errmsg());
+		 exit;
+ }
+   $match = '';  
+    preg_match_all('/"position":\[(\d+\.\d+)\,(\d+\.\d+)\]\,"address":"([^"]+)"\}\]/', $content, $match);  
+    print_r($match); 
+ 
+	exit;*/
+
+
+$mysql = new SaeMysql();	
+
+$f = new SaeFetchurl();
+function fetch() {
+	global $f;
+	include_once("../include/function.php");
+	///////
+	 $content = $f->fetch('http://www.meituan.com/api/v1/wuhan/deals');
+	 if ($ret === false){
+			 var_dump($f->errno(), $f->errmsg());
+			 exit;
+	 }
+	//解析XML
+	$xml = simplexml_load_string($content);
+	$result = $xml->xpath("//deal");
+
+	$mysql = new SaeMysql();	
+
+	//'id','division_timezone','division_offset_gmt','division_lat','division_lng',
+	$fields=array(
+	'deal_url','title','small_image_url','medium_image_url','large_image_url','division_id','division_name','vendor_id','vendor_name','vendor_website_url','status','start_date','end_date','quantity_sold','price','value','discount_percent'
+	);
+	$timestamp=time(); $fromsite="美团";
+	foreach($result as $deal){
+		$ins=array();
+
+		$ins["from_id"]=getEl($deal,"id");
+		$ins["lasttime"]=$timestamp;
+		
+		$sql = "SELECT id FROM `tuan_salesdata` where from_id='". $ins["from_id"] . "' and fromsite='" . $fromsite ."'";
+		$id=$mysql->getVar( $sql );
+		$id=$id?$id:'';
+		if($id=="") {
+			$ins["fromsite"]=$fromsite;
+			foreach($fields as $field){
+				$de=getEl($deal,$field);
+				$ins[$field]=$de;
+			}
+
+			fetchAddress(&$ins,$ins['deal_url']);
+
+			if($ins["status"]=="open") 
+				$ins["status"]=1;
+			else
+				$ins["status"]=0;
+
+			$ins["regtime"]=$timestamp;
+		}else{
+			$fields2=array('quantity_sold');
+			foreach($fields2 as $field){
+				$de=getEl($deal,$field);
+				$ins[$field]=$de;
+			}
+		}
+		save($ins, $id, "`tuan_salesdata`", $id_name = 'id');
+		//echo '$ins=';	print_r($ins);
+	}
+}
+
+function fetchAddress($arr,$url){
+	global $f;
+	$content = $f->fetch($url);
+	if ($ret === false){
+		//var_dump($f->errno(), $f->errmsg());
+		return;
+	}	 
+	$match = '';  
+	preg_match_all('/"position":\[(\d+\.\d+)\,(\d+\.\d+)\]\,"address":"([^"]+)"\}/', $content, $match);  
+//print_r($match); 
+	if($match){
+		$len=count($match[0]);
+		$ap="";$arr["address"]='[';
+		for($i=0;$i<$len;$i++){
+			$arr["address"] .= $ap. '{"lat":'. $match[1][$i] . ',"lng":'. $match[2][$i] . ',"addr":"'.$match[3][$i] . '"}';
+			$ap=",";
+		}
+		$arr["address"] .= ']';
+	}
+}
+//////////
+
+if( $_REQUEST["reload"]) { //echo 'fetch';
+	fetch();
+
+}
+
+$sql = "SELECT * FROM `tuan_salesdata` ";
+$data = $mysql->getData( $sql );
+if($data){
+	$datajson = json_encode($data);
+	//$datajson = preg_replace("#\\u([0-9a-f]+)#ie", "iconv('UCS-2', 'UTF-8', pack('H4', '\1'))", $datajson);
+}
+$mysql->closeDb();
+echo $datajson;
+?>

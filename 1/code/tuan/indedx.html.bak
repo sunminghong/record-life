@@ -1,0 +1,168 @@
+
+<html> 
+<head> 
+<meta http-equiv="Content-Type" content="text/html; charset=utf8" /> 
+ 
+<title>test</title> 
+<script type="text/javascript" src="../js/base_min.js"></script> 
+ <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;sensor=true&amp;key=ABQIAAAAMhaFw2aLvuJCNheXgJ1cnxRDi6Ts6gwjrqmrOxBIZrMnTQkaCxRDiFPKwwN3l-V56t6Yjp6NPN4jFQ" type="text/javascript"></script> 
+<style> 
+* {
+    margin: 0;
+    padding: 0;
+}
+body {font-size:14.3px;
+    background: #f2efe9;
+    position: relative;
+}
+p {
+    line - height: 18px;
+}
+a {
+    color: #6eafd5;
+    text - decoration: none;
+}
+a: hover {
+    text - decoration: underline;
+}
+.set {
+    background - color: #fff;
+    bottom: 5px;
+    left: 194px;
+    padding: 3px 10px;
+    position: absolute;
+    z - index: 10;
+    opacity: .8; - moz - opacity: .8;
+    filter: alpha(opacity: 80);
+    border: 1px solid; - moz - border - radius: 10px; - khtml - border - radius: 10px; - webkit - border - radius: 10px;
+    border - radius: 10px;
+}
+.set a {
+    color: #000;
+    color: red;
+    font - weight: bold;
+}
+.dealImg {
+    float: left;
+    padding - right: 5px;
+}
+.dealImg img {
+    border: 1px solid#6EAFD5;
+}
+.dealTxt {
+    display: table - cell;
+}
+#Gmap {
+    margin: 0 auto;
+    clear: both;
+    width: 100 % ;
+    height: 600px;
+}
+</style> 
+ 
+ 
+</head> 
+<body> 
+<!-- set --> 
+<div class="set"> 
+	<strong>新浪微博广场</strong> by <a href="http://www.putaoshu.com/blog/" target="_blank">putaoshu</a> 
+	|| <a id="refresh" href="#">更新微博广场</a>  
+</div> 
+<!-- Gmap --> 
+<div id="Gmap"></div> 
+<!-- google map api --> 
+<script src="http://maps.google.com/maps?file=api&amp;v=2&amp;sensor=true&amp;key=ABQIAAAAHWqXNrm5xXEoYqdBKohFARRjWxwBSnkLXDmkmtW2X3rieonoFRS82sIgmZBfy_qBUPmmL3A1o7mbSw" type="text/javascript"></script> 
+ 
+ 
+<script> 
+var data=[{"id":"19","fromsite":"\u7f8e\u56e2","from_id":"534602","deal_url":"http:\/\/wh.meituan.com\/deal\/534602.html","title":"\u4ec5\u552e66\u5143\uff01\u539f\u4ef7140\u5143\u7684\u7687\u8bb0\u7f8a\u874e\u5b50\u7cbe\u54c1\u56db\u4eba\u5957\u9910\uff08\u6cd5\u5f0f\u7f8a\u6392\u9505+\u7f8a\u8089\u5377+\u5305\u5fc3\u9c7c\u4e38+\u5c0f\u767d\u83dc\uff09\u3002\u5e02\u518510\u5e97\u901a\u7528\u3002\u521b\u65b0\u7279\u8272\u83dc\u54c1\uff0c\u7edd\u5999\u6ecb\u5473\u5f15\u7206\u6625\u65e5\u7f8e\u98df\u6d6a\u6f6e~","small_image_url":"http:\/\/p1.meituan.com\/120.76\/deal\/201103\/13\/hjshoutu.jpg","medium_image_url":"http:\/\/p1.meituan.com\/200.121\/deal\/201103\/13\/hjshoutu.jpg","large_image_url":"http:\/\/p0.meituan.com\/deal\/201103\/13\/hjshoutu.jpg","division_id":"wuhan","division_name":"\u6b66\u6c49","division_lat":"30.593088","division_lng":"114.305172","vendor_id":"\u7687\u8bb0\u7f8a\u874e\u5b50","vendor_name":"\u7687\u8bb0\u7f8a\u874e\u5b50","vendor_website_url":"","status":"1","start_date":"2011-03-14 00:00:00","end_date":"2011-03-16 23:59:59","quantity_sold":"870","price":"66","value":"140","discount_percent":"5","regtime":"1300176416","lasttime":"1300176416"},{"id":"15","fromsite":"\u7f8e\u56e2","from_id":"463253","deal_url":"http:\/\/wh.meituan.com\/deal\/463253.html","title":"\u4ec5\u552e48\u5143\uff01\u539f\u4ef7152\u5143\u7684\u6c5f\u6c49\u8def\u73af\u827a\u65b0\u6c11\u4f17\u4e50\u56ed\u7535\u5f71\u57ce\u53cc\u4eba\u89c2\u5f71\u5957\u7968\uff08\u7535\u5f71\u79682\u5f20+\u53ef\u53e3\u53ef\u4e50\u539f\u53f6\u6e05\u9999\u8309\u83892\u74f6\uff09\uff0c\u4e0d\u9650\u7535\u5f71\u7c7b\u578b\uff08\u542b3D\uff0cIMAX\u300a\u5173\u952e\u7b2c\u56db\u53f7\u300b\uff09\u3001\u4e0d\u9650\u7535\u5f71\u573a\u6b21\uff0c\u8282\u5047\u65e5\u901a\u7528\uff0c\u5373\u5151\u5373\u770b\u3002\u4f60\u4eec\u7684\u4e13\u5c5e\u7535\u5f71\u7a7a\u95f4\uff0c\u9700\u8981\u6700\u7ed9\u529b\u7684\u652f\u6301~","small_image_url":"http:\/\/p1.meituan.com\/120.76\/deal\/201103\/14\/hy3shoutu_0314182350.jpg","medium_image_url":"http:\/\/p1.meituan.com\/200.121\/deal\/201103\/14\/hy3shoutu_0314182350.jpg","large_image_url":"http:\/\/p0.meituan.com\/deal\/201103\/14\/hy3shoutu_0314182350.jpg","division_id":"wuhan","division_name":"\u6b66\u6c49","division_lat":"30.593088","division_lng":"114.305172","vendor_id":"\u73af\u827a\u65b0\u6c11\u4f17\u4e50\u56ed\u7535\u5f71\u57ce","vendor_name":"\u73af\u827a\u65b0\u6c11\u4f17\u4e50\u56ed\u7535\u5f71\u57ce","vendor_website_url":"http:\/\/www.studiocitychina.com\/","status":"1","start_date":"2011-03-15 00:00:00","end_date":"2011-03-17 23:59:59","quantity_sold":"593","price":"48","value":"152","discount_percent":"3","regtime":"1300176416","lasttime":"1300176416"},{"id":"13","fromsite":"\u7f8e\u56e2","from_id":"845959","deal_url":"http:\/\/wh.meituan.com\/deal\/845959.html","title":"\u4ec5\u552e49\u5143\uff01\u539f\u4ef7104\u5143\u7684\u62ff\u6e21\u9ebb\u8fa3\u9999\u9505\u53cc\u4eba\u5957\u9910\uff08\u8364\u83dc\u4efb\u9009500g+\u7d20\u83dc\u4efb\u9009500g+\u9505\u5e95+\u673a\u6253\u996e\u6599\u65e0\u9650\u7545\u996e+\u7c73\u996d2\u4efd\uff09\u3002\u4e00\u9505\u767e\u5473\uff0c\u95fb\u9999\u5373\u9189\uff0c\u4e00\u5403\u4e0a\u763e~","small_image_url":"http:\/\/p1.meituan.com\/120.76\/deal\/201103\/14\/ndshoutu.jpg","medium_image_url":"http:\/\/p1.meituan.com\/200.121\/deal\/201103\/14\/ndshoutu.jpg","large_image_url":"http:\/\/p0.meituan.com\/deal\/201103\/14\/ndshoutu.jpg","division_id":"wuhan","division_name":"\u6b66\u6c49","division_lat":"30.593088","division_lng":"114.305172","vendor_id":"\u62ff\u6e21\u9ebb\u8fa3\u9999\u9505","vendor_name":"\u62ff\u6e21\u9ebb\u8fa3\u9999\u9505","vendor_website_url":"","status":"1","start_date":"2011-03-15 00:00:00","end_date":"2011-03-17 23:59:59","quantity_sold":"535","price":"49","value":"104","discount_percent":"5","regtime":"1300176416","lasttime":"1300176416"},{"id":"22","fromsite":"\u7f8e\u56e2","from_id":"834653","deal_url":"http:\/\/wh.meituan.com\/deal\/834653.html","title":"\u4ec5\u552e99\u5143\uff01\u539f\u4ef7488\u5143\u7684\u6700\u7ec8\u5e7b\u60f3\u65f6\u5c1a\u6444\u5f71\u5de5\u4f5c\u5ba4\u5149\u8c37\u603b\u5e97\u5b8c\u7f8e\u89c6\u89c9\u5957\u7cfb\uff0850\u5f20\u5e95\u7247\u523b\u76d8\u5168\u9001+3\u7ec4\u670d\u88c5\u9020\u578b+7\u5bf8\u97e9\u5f0f\u8def\u6613\u518c+24\u5bf8\u653e\u5927\u660e\u661f\u6d77\u62a5+5\u5bf8\u6c34\u6676\u684c\u6446\uff09\u3002\u5f70\u663e\u65f6\u5c1a\uff0c\u8be0\u91ca\u4e2a\u6027\uff0c\u5728\u8fd9\u91cc\uff0c\u4f60\u5c31\u662f\u5973\u4e3b\u89d2\uff01","small_image_url":"http:\/\/p0.meituan.com\/120.76\/deal\/201103\/11\/zzshoutu.jpg","medium_image_url":"http:\/\/p0.meituan.com\/200.121\/deal\/201103\/11\/zzshoutu.jpg","large_image_url":"http:\/\/p1.meituan.com\/deal\/201103\/11\/zzshoutu.jpg","division_id":"wuhan","division_name":"\u6b66\u6c49","division_lat":"30.593088","division_lng":"114.305172","vendor_id":"\u6700\u7ec8\u5e7b\u60f3\u65f6\u5c1a\u6444\u5f71\u5de5\u4f5c\u5ba4\uff08\u5149\u8c37\u603b\u5e97\uff09","vendor_name":"\u6700\u7ec8\u5e7b\u60f3\u65f6\u5c1a\u6444\u5f71\u5de5\u4f5c\u5ba4\uff08\u5149\u8c37\u603b\u5e97\uff09","vendor_website_url":"http:\/\/www.zzhx99.com","status":"1","start_date":"2011-03-14 00:00:00","end_date":"2011-03-16 23:59:59","quantity_sold":"202","price":"99","value":"488","discount_percent":"2","regtime":"1300176416","lasttime":"1300176416"},{"id":"21","fromsite":"\u7f8e\u56e2","from_id":"564496","deal_url":"http:\/\/wh.meituan.com\/deal\/564496.html","title":"\u4ec5\u552e19.9\u5143\uff01\u539f\u4ef7690\u5143\u7684\u7ea2\u9ec4\u84dd\u5357\u6e56\u4eb2\u5b50\u56ed\u4eb2\u5b50\u6b22\u4e50\u5957\u9910\uff08\u5e7c\u513f\u667a\u80fd\u548c\u53d1\u80b2\u5546\u6d4b\u67e5+\u4eb2\u5b50\u6e38\u620f\u8bfe\u7a0b+\u4f53\u80fd\u8bad\u7ec3\u6d3b\u52a810\u6b21\uff09\uff0c\u9002\u54080-4\u5c81\u5b9d\u5b9d\uff0c\u6709\u6548\u671f\u957f\u8fbe\u534a\u5e74\uff0c\u8282\u5047\u65e5\u901a\u7528\u3002\u653e\u98de\u7684\u5e0c\u671b\uff0c\u667a\u6167\u7684\u5f00\u59cb~","small_image_url":"http:\/\/p0.meituan.com\/120.76\/deal\/201103\/11\/hhlshoutu.jpg","medium_image_url":"http:\/\/p0.meituan.com\/200.121\/deal\/201103\/11\/hhlshoutu.jpg","large_image_url":"http:\/\/p1.meituan.com\/deal\/201103\/11\/hhlshoutu.jpg","division_id":"wuhan","division_name":"\u6b66\u6c49","division_lat":"30.593088","division_lng":"114.305172","vendor_id":"\u7ea2\u9ec4\u84dd\u5357\u6e56\u4eb2\u5b50\u56ed","vendor_name":"\u7ea2\u9ec4\u84dd\u5357\u6e56\u4eb2\u5b50\u56ed","vendor_website_url":"http:\/\/www.rybwh.com","status":"1","start_date":"2011-03-14 00:00:00","end_date":"2011-03-16 23:59:59","quantity_sold":"475","price":"20","value":"690","discount_percent":"0","regtime":"1300176416","lasttime":"1300176416"},{"id":"14","fromsite":"\u7f8e\u56e2","from_id":"755253","deal_url":"http:\/\/wh.meituan.com\/deal\/755253.html","title":"\u4ec5\u552e9.9\u5143\uff01\u539f\u4ef726.8\u5143\u7684\u53e4\u5934\u6c64\u82b1\u524d\u6708\u867e\u5957\u9910\uff08\u53e4\u5934\u6c64\u82b1\u524d\u6708\u867e+\u62db\u724c\u7eaf\u9aa8\u6c64+\u9762\/\u7c89\/\u996d\/\u6ce1\u6ce1\u996d\u4e3b\u98df4\u90091\uff09\uff0c\u53e6\u8d60\u5f00\u80c3\u5c0f\u83dc1\u4efd\uff0c\u8282\u5047\u65e5\u4e0d\u9650\uff0c\u5b9d\u5229\u91d1\u5e97\/\u53f0\u5317\u8def\u5e972\u5e97\u901a\u7528\u3002\u6bcf\u5929\u53e4\u5934\u6c64\uff0c\u8d8a\u559d\u8d8a\u6f02\u4eae~","small_image_url":"http:\/\/p1.meituan.com\/120.76\/deal\/201103\/14\/GTTshoutu01.jpg","medium_image_url":"http:\/\/p0.meituan.com\/200.121\/deal\/201103\/14\/GTTshoutu01.jpg","large_image_url":"http:\/\/p1.meituan.com\/deal\/201103\/14\/GTTshoutu01.jpg","division_id":"wuhan","division_name":"\u6b66\u6c49","division_lat":"30.593088","division_lng":"114.305172","vendor_id":"\u53e4\u5934\u6c64","vendor_name":"\u53e4\u5934\u6c64","vendor_website_url":"http:\/\/www.tang001.com","status":"1","start_date":"2011-03-15 00:00:00","end_date":"2011-03-17 23:59:59","quantity_sold":"831","price":"10","value":"27","discount_percent":"4","regtime":"1300176416","lasttime":"1300176416"},{"id":"16","fromsite":"\u7f8e\u56e2","from_id":"349816","deal_url":"http:\/\/www.meituan.com\/deal\/349816.html","title":"\u4ec5\u552e1\u5143\uff01\u539f\u4ef750\u5143\u7684\u9ea6\u8003\u6797\u7f51\u4e0a\u8d2d\u7269\u5546\u57ce\u73b0\u91d1\u62b5\u7528\u5238\uff0c\u6ee1200\u5143\u5c31\u53ef\u4f7f\u7528\u3002\u5168\u573a\u901a\u7528\uff0c\u5168\u56fd\u8054\u4fdd\uff0c10\u5929\u8d28\u4fdd\u65e0\u6761\u4ef6\u9000\u8d27\u3002\u9ea6\u8003\u6797\u6f6e\u6d41\u98ce\u5411\u6807\uff0c\u70ae\u5236\u5343\u5a07\u767e\u5a9a\u7684\u4f60\uff01","small_image_url":"http:\/\/p1.meituan.com\/120.76\/deal\/201103\/14\/shoutu_0314161658.jpg","medium_image_url":"http:\/\/p1.meituan.com\/200.121\/deal\/201103\/14\/shoutu_0314161658.jpg","large_image_url":"http:\/\/p0.meituan.com\/deal\/201103\/14\/shoutu_0314161658.jpg","division_id":"huoxing","division_name":"\u5168\u56fd","division_lat":"0","division_lng":"0","vendor_id":"\u9ea6\u8003\u6797","vendor_name":"\u9ea6\u8003\u6797","vendor_website_url":"http:\/\/www.m18.com\/","status":"1","start_date":"2011-03-15 00:00:00","end_date":"2011-03-17 23:59:59","quantity_sold":"6098","price":"1","value":"50","discount_percent":"0","regtime":"1300176416","lasttime":"1300176416"},{"id":"20","fromsite":"\u7f8e\u56e2","from_id":"136378","deal_url":"http:\/\/wh.meituan.com\/deal\/136378.html","title":"\u4ec5\u552e3.9\u5143\uff01\u539f\u4ef725\u5143\u7684NEWS\u684c\u6e38\u5427\u6b22\u4e50\u5957\u9910\uff0850\u4f59\u6b3e\u4e3b\u6d41\u684c\u6e38+PS2\u3001Wii\u3001\u5c0f\u9738\u738b\u6e38\u620f\u673a+\u679c\u6c415\u90091+\u8336\u996e3\u90091+\u65f6\u5c1a\u5c0f\u5403+WIFI\uff09\uff0c\u7545\u73a9\u7545\u5403\u7545\u996e\u3002\u4e09\u4e94\u597d\u53cb\u56f4\u684c\u800c\u6e38\uff0c\u5feb\u4e50\u4e0d\u5355\u884c~","small_image_url":"http:\/\/p0.meituan.com\/120.76\/deal\/201103\/11\/newsshoutu.jpg","medium_image_url":"http:\/\/p0.meituan.com\/200.121\/deal\/201103\/11\/newsshoutu.jpg","large_image_url":"http:\/\/p0.meituan.com\/deal\/201103\/11\/newsshoutu.jpg","division_id":"wuhan","division_name":"\u6b66\u6c49","division_lat":"30.593088","division_lng":"114.305172","vendor_id":"NEWS\u684c\u6e38\u5427","vendor_name":"NEWS\u684c\u6e38\u5427","vendor_website_url":"","status":"1","start_date":"2011-03-13 00:00:00","end_date":"2011-03-15 23:59:59","quantity_sold":"1338","price":"4","value":"25","discount_percent":"2","regtime":"1300176416","lasttime":"1300176416"},{"id":"17","fromsite":"\u7f8e\u56e2","from_id":"liyuchun2011","deal_url":"http:\/\/www.meituan.com\/deal\/liyuchun2011.html","title":"\u7f8e\u68a6\u6210\u771f\uff1a0\u5143\u5373\u53ef\u8d62\u53d62011\u674e\u5b87\u6625WhyMe\u6b66\u6c49\u6f14\u5531\u4f1a\u53cc\u4eba\u5927\u793c\u5305\uff08\u5185\u542b\u6f14\u5531\u4f1a\u5185\u573aVIP\u533a2\u5f20\u7968+\u6b66\u6c49\u5f80\u8fd4\u673a\u79682\u5f20+\u6625\u6625\u6b66\u6c49\u4e0b\u69bb\u9152\u5e97\u4f4f\u5bbf1\u665a\uff09\uff0c\u6700\u591a8\u4e2a\u793c\u5305\u3002\u6bcf\u9080\u8bf71\u4eba\uff0c\u591a1\u4e2a\u4e2d\u5956\u53f7\u7801\u3002\u7231\u6625\u6625\uff0c\u53ea\u7ba1\u7231\uff0c\u4e00\u5207\u4ea4\u7ed9\u7f8e\u56e2\u7f51\u3002","small_image_url":"http:\/\/p1.meituan.com\/120.76\/deal\/201103\/09\/cover.jpg","medium_image_url":"http:\/\/p1.meituan.com\/200.121\/deal\/201103\/09\/cover.jpg","large_image_url":"http:\/\/p1.meituan.com\/deal\/201103\/09\/cover.jpg","division_id":"huoxing","division_name":"\u5168\u56fd","division_lat":"0","division_lng":"0","vendor_id":"\u7f8e\u56e2\u7f51","vendor_name":"\u7f8e\u56e2\u7f51","vendor_website_url":"http:\/\/www.meituan.com","status":"1","start_date":"2011-03-10 16:30:00","end_date":"2011-03-17 23:59:59","quantity_sold":"198412","price":"0","value":"16360","discount_percent":"0","regtime":"1300176416","lasttime":"1300176416"},{"id":"18","fromsite":"\u7f8e\u56e2","from_id":"ipad2","deal_url":"http:\/\/www.meituan.com\/deal\/ipad2.html","title":"\u7f8e\u68a6\u6210\u771f\uff1a0\u5143\u53c2\u4e0e\u5373\u53ef\u7b2c\u4e00\u65f6\u95f4\u8d62\u53d6\u6700\u65b0\u6b3e\u82f9\u679ciPad2\u73b0\u8d271\u53f0\uff01\u73b0\u8d27\uff01\u662f\u73b0\u8d27\uff01\u7f8e\u56fd\u76f4\u9001\uff01\u6bcf\u9080\u8bf71\u4e2a\u65b0\u7528\u6237\u53c2\u52a0\u591a1\u4e2a\u62bd\u5956\u53f7\u7801","small_image_url":"http:\/\/p0.meituan.com\/120.76\/deal\/201103\/08\/cover_0308225608.jpg","medium_image_url":"http:\/\/p1.meituan.com\/200.121\/deal\/201103\/08\/cover_0308225608.jpg","large_image_url":"http:\/\/p1.meituan.com\/deal\/201103\/08\/cover_0308225608.jpg","division_id":"huoxing","division_name":"\u5168\u56fd","division_lat":"0","division_lng":"0","vendor_id":"\u7f8e\u56e2\u7f51","vendor_name":"\u7f8e\u56e2\u7f51","vendor_website_url":"http:\/\/www.meituan.com","status":"1","start_date":"2011-03-09 00:00:00","end_date":"2011-03-18 23:59:59","quantity_sold":"581281","price":"0","value":"4888","discount_percent":"0","regtime":"1300176416","lasttime":"1300176416"}];
+ 
+function date() {
+    var a, c, d;
+    var b = new Date();
+    a = b.getHours();
+    c = b.getMinutes();
+    d = b.getSeconds();
+    b = a + ":" + c + ":" + d;
+    return b
+}
+var zoom = 13;
+var num = true;
+var dalay = 6000;
+var map = new GMap2(document.getElementById("Gmap"));
+function initMap() {
+    map.setCenter(new GLatLng(30.593088,114.305172), zoom);
+    map.enableScrollWheelZoom();
+    map.addControl(new GLargeMapControl());
+    map.addControl(new GOverviewMapControl());
+    map.addControl(new GScaleControl())
+}
+ 
+function showTuan() {
+	for(var i=0;i<data.length;i++){
+		var deal=data[i];
+		var h = "<div class='deal'><p class='dealImg'><a href='" + deal.deal_url + "'target='_blank'><img src=" + deal.small_image_url + " /></a></p><div class='dealTxt'><p><a href='" + deal.vendor_website_url + "'target='_blank'>" + deal.vendor_name + "</a>:" +deal.title + "...</p><p class='ft'>已有" + deal.quantity_sold + "人购买&nbsp;&nbsp;结束时间：" + deal.end_date + "</p></div></div>";
+
+//		alert(h);break;
+		//point = new GLatLng(deal.division_lat,deal.division_lng);
+		point= new GLatLng(30.57586,114.28686);
+//            map.setCenter(point, zoom);
+		marker = new GMarker(point);
+		map.addOverlay(marker);
+		map.removeOverlay(marker);
+		marker.bindInfoWindowHtml(h, {
+			maxWdith: 100,
+			noCloseOnClick: true
+		});
+		marker.openInfoWindowHtml(h, {
+			maxWdith: 100,
+			noCloseOnClick: true
+		});break;
+	}
+}
+function placeSet(c, b) {
+    var f = c;
+    var e = b;
+    var d = new GClientGeocoder();
+    var a;
+    d.getLocations(f,
+    function(g) {
+        if (!g || g.Status.code != 200) {
+            return false
+        } else {
+            place = g.Placemark[0];
+            point = new GLatLng(place.Point.coordinates[1], place.Point.coordinates[0]);
+            map.setCenter(point, zoom);
+            marker = new GMarker(point);
+            map.addOverlay(marker);
+            map.removeOverlay(marker);
+            marker.bindInfoWindowHtml(e, {
+                maxWdith: 100,
+                noCloseOnClick: true
+            });
+            marker.openInfoWindowHtml(e, {
+                maxWdith: 100,
+                noCloseOnClick: true
+            })
+        }
+    })
+}
+ 
+	var ol=window.onload;
+window.onload=function(){
+	ol();
+ 
+    var a = document.body.clientHeight && document.documentElement.clientHeight;
+    $("#Gmap").height(a);
+    initMap();
+    showTuan();
+    $("#refresh").click(function() {
+        showTuan();
+        return false
+    })
+};
+ 
+</script> 
+ 
+</body> 
+</html>

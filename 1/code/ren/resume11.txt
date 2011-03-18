@@ -1,0 +1,33 @@
+/*switch($act){
+			case "r":
+				include 'rec/index.php';
+			break;
+			case 'login':
+				//UCenter 用户登录的 Example 代码
+				include 'ren/login_db.php';
+			break;
+			case 'logout':
+				//UCenter 用户退出的 Example 代码
+				include 'ren/logout.php';
+			break;
+			case 'register':
+				//UCenter 用户注册的 Example 代码
+				include 'ren/register_db.php';
+			break;
+			case 'pmlist':
+				//UCenter 未读短消息列表的 Example 代码
+				include 'code/pmlist.php';
+			break;
+			case 'pmwin':
+				//UCenter 短消息中心的 Example 代码
+				include 'code/pmwin.php';
+			break;
+			case 'friend':
+				//UCenter 好友的 Example 代码
+				include 'code/friend.php';
+			break;
+			case 'avatar':
+				//UCenter 设置头像的 Example 代码
+				include 'code/avatar.php';
+			break;
+		}*/

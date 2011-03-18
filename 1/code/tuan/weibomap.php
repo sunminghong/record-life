@@ -1,0 +1,140 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>新浪微博广场</title>
+<style type="text/css">
+*{margin:0;padding:0;}body{font-size:12px;background:#f2efe9;position:relative;}p{line-height:18px;}a{color:#6eafd5;text-decoration:none;}a:hover{text-decoration:underline;}.set{background-color:#fff;bottom:5px;left:194px;padding:3px 10px;position:absolute;z-index:10;opacity:.8;-moz-opacity:.8;filter:alpha(opacity:80);border:1px solid;-moz-border-radius:10px;-khtml-border-radius:10px;-webkit-border-radius:10px;border-radius:10px;}.set a{color:#000;color:red;font-weight:bold;}.weiboImg{float:left;padding-right:5px;}.weiboImg img{border:1px solid #6EAFD5;}.weiboTxt{display:table-cell;}#Gmap{margin:0 auto;clear:both;width:100%;height:600px;}
+</style>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+<!-- google map api -->
+<script src="http://maps.google.com/maps?file=api&amp;v=2&amp;sensor=true&amp;key=ABQIAAAAMhaFw2aLvuJCNheXgJ1cnxTwr-LwzND12vMgSpcEZrCrX-deORRMaXpHzeY4Ho3nNKObmhXmK3UTdg" type="text/javascript"></script>
+</head>
+<body>
+<!-- set -->
+<div class="set">
+	<strong>新浪微博广场</strong> by <a href="http://t.sina.com.cn/5d13" target="_blank">一挥</a> 
+	|| <a id="refresh" href="#">更新微博广场</a>  
+</div>
+<!-- Gmap -->
+<div id="Gmap"></div>
+
+<script type="text/javascript">
+
+function date() {
+    var a, c, d;
+    var b = new Date();
+    a = b.getHours();
+    c = b.getMinutes();
+    d = b.getSeconds();
+    b = a + ":" + c + ":" + d;
+    return b
+}
+var zoom = 5;
+var num = true;
+var weiboLocale = [];
+var weiboHtml = [];
+var dalay = 6000;
+var map = new GMap2(document.getElementById("Gmap"));
+function initMap() {
+    map.setCenter(new GLatLng(39.9, 116.3), zoom);
+    map.enableScrollWheelZoom();
+    map.addControl(new GLargeMapControl());
+    map.addControl(new GOverviewMapControl());
+    map.addControl(new GScaleControl())
+}
+function weibo() {
+    $.ajax({
+        type: "get",
+        url: "http://api.t.sina.com.cn/statuses/public_timeline.json?source=1039614589",
+        dataType: "jsonp",
+        beforeSend: function(a) {},
+        success: function(b, c) {
+            var a = 0;
+            $.each(b,
+            function(l) {
+                var k = b[l].created_at,
+                g,
+                e,
+                h = new Date(),
+                n,
+                j,
+                o;
+                var f = "http://t.sina.com.cn/",
+                d;
+                g = k.slice(11, 20);
+                n = -k.slice(11, 13) + h.getHours();
+                j = -k.slice(14, 16) + h.getMinutes();
+                o = -k.slice(17, 19) + h.getSeconds();
+                var m = n + "Hour";
+                if (n < 1) {
+                    m = ""
+                }
+                if (j > 0) {
+                    e = m + j + " Minutes Ago"
+                }
+                d = (!b[l].user.domain.toString()) ? (f + b[l].user.id.toString()) : (f + b[l].user.domain.toString());
+                weiboLocale[l] = b[l].user.location;
+                weiboHtml[l] = "<div class='weiboList'><p class='weiboImg'><a href='" + d + "'target='_blank'><img src=" + b[l].user.profile_image_url + "></a></p><div class='weiboTxt'><p><a href='" + d + "'target='_blank'>" + b[l].user.name.toString() + "</a>:" + b[l].text + "</p><p class='ft'>" + e + "&nbsp;" + b[l].source + "&nbsp;" + b[l].user.location.toString() + "</p></div></div>"
+            })
+        },
+        complete: function(b, c) {
+            var a = 0;
+            beginplaceSet = setInterval(function() {
+                var e = weiboLocale[a];
+                var d = weiboHtml[a];
+                placeSet(e, d);
+                a++;
+                if (a > weiboLocale.length - 1) {
+                    a = 0
+                }
+            },
+            dalay)
+        },
+        error: function() {
+            alert("error")
+        }
+    })
+}
+function placeSet(c, b) {
+    var f = c;
+    var e = b;
+    var d = new GClientGeocoder();
+    var a;
+    d.getLocations(f,
+    function(g) {
+        if (!g || g.Status.code != 200) {
+            return false
+        } else {
+            place = g.Placemark[0];
+            point = new GLatLng(place.Point.coordinates[1], place.Point.coordinates[0]);
+            map.setCenter(point, zoom);
+            marker = new GMarker(point);
+            map.addOverlay(marker);
+            map.removeOverlay(marker);
+            marker.bindInfoWindowHtml(e, {
+                maxWdith: 100,
+                noCloseOnClick: true
+            });
+            marker.openInfoWindowHtml(e, {
+                maxWdith: 100,
+                noCloseOnClick: true
+            })
+        }
+    })
+}
+$(document).ready(function() {
+    var a = document.body.clientHeight && document.documentElement.clientHeight;
+    $("#Gmap").height(a);
+    initMap();
+    weibo();
+    $("#refresh").click(function() {
+        weibo();
+        return false
+    })
+});
+
+</script>
+</body>
+</html>
